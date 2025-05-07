@@ -19,7 +19,6 @@ class LoginController extends AbstractController
     }
 
 
-
     /**
      * @Route("/login-submit", name="app_login_submit", methods={"POST"})
      */
@@ -42,38 +41,4 @@ class LoginController extends AbstractController
         ]);
     }
 
-    /**
-     * @Route("/login-submit", name="app_login_submit", methods={"POST"})
-     */
-    public function handleLogin_test(Request $request, HttpClientInterface $client): Response
-    {
-        $email = $request->request->get('email');
-        $password = $request->request->get('password');
-
-        try {
-            $apiResponse = $client->request('POST', 'http://127.0.0.1:8000/api/login', [
-                'json' => [
-                    "email" => $email,
-                    "password" => $password,
-                ],
-            ]);
-
-            $status = $apiResponse->getStatusCode();
-
-            if ($status === 200) {
-                $data = $apiResponse->toArray();
-                $message = 'Connexion réussie ! Token : ' . $data['token'];
-                print("here");
-                print($message);
-            } else {
-                $message = 'Échec de la connexion. Code: ' . $status;
-            }
-        } catch (\Exception $e) {
-            $message = 'Erreur : ' . $e->getMessage();
-        }
-
-        return $this->render('login/index.html.twig', [
-            'message' => $message,
-        ]);
-    }
 }
