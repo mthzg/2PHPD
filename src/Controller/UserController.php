@@ -11,10 +11,11 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
-#[Route('/api', name: 'api_')]
 class UserController extends AbstractController
 {
-    #[Route('/players', name: 'get_all', methods: ['GET'])]
+    /**
+     * @Route("/api/players", name="api_user_get_all", methods={"GET"})
+     */
     public function getAllUsers(EntityManagerInterface $em): JsonResponse
     {
         $users = $em->getRepository(User::class)->findAll();
@@ -35,7 +36,9 @@ class UserController extends AbstractController
         return $this->json($data);
     }
 
-    #[Route('/players/{id}', name: 'get_by_id', methods: ['GET'])]
+    /**
+     * @Route("/api/players/{id}", name="api_user_get_by_id", methods={"GET"})
+     */
     public function getUserById(int $id, EntityManagerInterface $em): JsonResponse
     {
         $user = $em->getRepository(User::class)->find($id);
@@ -55,7 +58,9 @@ class UserController extends AbstractController
         ]);
     }
 
-    #[Route('/register', name: 'user_register', methods: ['POST'])]
+    /**
+     * @Route("/api/register", name="api_user_register", methods={"POST"})
+     */
     public function createUser(Request $request, EntityManagerInterface $em, UserPasswordHasherInterface $passwordHasher): JsonResponse
     {
         $data = json_decode($request->getContent(), true);
@@ -77,7 +82,9 @@ class UserController extends AbstractController
         return $this->json(['message' => 'User created successfully'], Response::HTTP_CREATED);
     }
 
-    #[Route('/players/{id}', name: 'player_update', methods: ['PUT'])]
+    /**
+     * @Route("/api/players/{id}", name="api_user_update", methods={"PUT"})
+     */
     public function updateUser(int $id, Request $request, EntityManagerInterface $em, UserPasswordHasherInterface $passwordHasher): JsonResponse
     {
         $user = $em->getRepository(User::class)->find($id);
@@ -104,7 +111,9 @@ class UserController extends AbstractController
         return $this->json(['message' => 'User updated successfully']);
     }
 
-    #[Route('/players/{id}', name: 'player_delete', methods: ['DELETE'])]
+    /**
+     * @Route("/api/players/{id}", name="api_user_delete", methods={"DELETE"})
+     */
     public function deleteUser(int $id, EntityManagerInterface $em): JsonResponse
     {
         $user = $em->getRepository(User::class)->find($id);

@@ -11,10 +11,11 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-#[Route('/api/tournaments', name: 'api_tournament_')]
 class TournamentController extends AbstractController
 {
-    #[Route('', name: 'list', methods: ['GET'])]
+    /**
+     * @Route("/api/tournaments", name="api_tournament_list", methods={"GET"})
+     */
     public function getAllTournaments(EntityManagerInterface $em): JsonResponse
     {
         $tournaments = $em->getRepository(Tournament::class)->findAll();
@@ -27,7 +28,9 @@ class TournamentController extends AbstractController
         return $this->json($data);
     }
 
-    #[Route('/{id}', name: 'get_by_id', methods: ['GET'])]
+    /**
+     * @Route("/api/tournaments/{id}", name="api_tournament_get_by_id", methods={"GET"})
+     */
     public function getTournamentById(int $id, EntityManagerInterface $em): JsonResponse
     {
         $tournament = $em->getRepository(Tournament::class)->find($id);
@@ -38,7 +41,9 @@ class TournamentController extends AbstractController
         return $this->json($this->serializeTournament($tournament));
     }
 
-    #[Route('', name: 'create', methods: ['POST'])]
+    /**
+     * @Route("/api/tournaments", name="api_tournament_create", methods={"POST"})
+     */
     public function createTournament(Request $request, EntityManagerInterface $em): JsonResponse
     {
         $data = json_decode($request->getContent(), true);
@@ -65,7 +70,9 @@ class TournamentController extends AbstractController
         return $this->json(['message' => 'Tournament created', 'id' => $tournament->getId()], Response::HTTP_CREATED);
     }
 
-    #[Route('/{id}', name: 'update', methods: ['PUT'])]
+    /**
+     * @Route("/api/tournaments/{id}", name="api_tournament_update", methods={"PUT"})
+     */
     public function updateTournament(int $id, Request $request, EntityManagerInterface $em): JsonResponse
     {
         $tournament = $em->getRepository(Tournament::class)->find($id);
@@ -94,7 +101,9 @@ class TournamentController extends AbstractController
         return $this->json(['message' => 'Tournament updated']);
     }
 
-    #[Route('/{id}', name: 'delete', methods: ['DELETE'])]
+    /**
+     * @Route("/api/tournaments/{id}", name="api_tournament_delete", methods={"DELETE"})
+     */
     public function deleteTournament(int $id, EntityManagerInterface $em): JsonResponse
     {
         $tournament = $em->getRepository(Tournament::class)->find($id);
@@ -124,5 +133,4 @@ class TournamentController extends AbstractController
             'sport' => $tournament->getSport(),
         ];
     }
-    
 }

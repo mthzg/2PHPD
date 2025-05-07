@@ -13,10 +13,11 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
-#[Route('/api/tournaments/{tournamentId}/sport-matchs')]
 class SportMatchController extends AbstractController
 {
-    #[Route('', name: 'get_matches_by_tournament', methods: ['GET'])]
+    /**
+     * @Route("/api/tournaments/{tournamentId}/sport-matchs", name="api_tournament_get_matches", methods={"GET"})
+     */
     public function getMatchesByTournament(int $tournamentId, SportMatchRepository $matchRepo): JsonResponse
     {
         $matches = $matchRepo->findBy(['tournament' => $tournamentId]);
@@ -26,7 +27,9 @@ class SportMatchController extends AbstractController
         return $this->json($data);
     }
 
-    #[Route('/{matchId}', name: 'get_match_detail', methods: ['GET'])]
+    /**
+     * @Route("/api/tournaments/{tournamentId}/sport-matchs/{matchId}", name="api_tournament_get_match_detail", methods={"GET"})
+     */
     public function getMatchDetail(int $matchId, SportMatchRepository $matchRepo): JsonResponse
     {
         $match = $matchRepo->find($matchId);
@@ -38,7 +41,9 @@ class SportMatchController extends AbstractController
         return $this->json($this->serializeMatch($match));
     }
 
-    #[Route('', name: 'create_match', methods: ['POST'])]
+    /**
+     * @Route("/api/tournaments/{tournamentId}/sport-matchs", name="api_tournament_create_match", methods={"POST"})
+     */
     public function createMatch(
         int $tournamentId,
         Request $request,
@@ -75,7 +80,9 @@ class SportMatchController extends AbstractController
         return $this->json($this->serializeMatch($match), 201);
     }
 
-    #[Route('/{matchId}', name: 'update_match', methods: ['PUT'])]
+    /**
+     * @Route("/api/tournaments/{tournamentId}/sport-matchs/{matchId}", name="api_tournament_update_match", methods={"PUT"})
+     */
     public function updateMatch(
         int $matchId,
         Request $request,
@@ -122,7 +129,9 @@ class SportMatchController extends AbstractController
         return $this->json($this->serializeMatch($match));
     }
 
-    #[Route('/{matchId}', name: 'delete_match', methods: ['DELETE'])]
+    /**
+     * @Route("/api/tournaments/{tournamentId}/sport-matchs/{matchId}", name="api_tournament_delete_match", methods={"DELETE"})
+     */
     public function deleteMatch(int $matchId, SportMatchRepository $matchRepo, EntityManagerInterface $em): JsonResponse
     {
         $match = $matchRepo->find($matchId);

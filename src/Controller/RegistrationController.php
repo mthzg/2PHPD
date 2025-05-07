@@ -12,10 +12,11 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
-#[Route('/api/tournaments', name: 'api_tournament_')]
 class RegistrationController extends AbstractController
 {
-    #[Route('/{id}/registrations', name: 'get_registrations', methods: ['GET'])]
+    /**
+     * @Route("/api/tournaments/{id}/registrations", name="api_tournament_get_registrations", methods={"GET"})
+     */
     public function getRegistrationsForTournament(int $id, EntityManagerInterface $em): JsonResponse
     {
         $tournament = $em->getRepository(Tournament::class)->find($id);
@@ -39,7 +40,9 @@ class RegistrationController extends AbstractController
         return $this->json($data);
     }
 
-    #[Route('/{id}/registrations', name: 'register_user', methods: ['POST'])]
+    /**
+     * @Route("/api/tournaments/{id}/registrations", name="api_tournament_register_user", methods={"POST"})
+     */
     public function registerUserToTournament(int $id, Request $request, EntityManagerInterface $em): JsonResponse
     {
         $tournament = $em->getRepository(Tournament::class)->find($id);
@@ -66,7 +69,9 @@ class RegistrationController extends AbstractController
         return $this->json(['message' => 'Registration successful'], Response::HTTP_CREATED);
     }
 
-    #[Route('/{idTournament}/registrations/{idRegistration}', name: 'delete_registration', methods: ['DELETE'])]
+    /**
+     * @Route("/api/tournaments/{idTournament}/registrations/{idRegistration}", name="api_tournament_delete_registration", methods={"DELETE"})
+     */
     public function deleteRegistration(int $idTournament, int $idRegistration, EntityManagerInterface $em): JsonResponse
     {
         $registration = $em->getRepository(Registration::class)->find($idRegistration);
