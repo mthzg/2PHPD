@@ -14,7 +14,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 #[Route('/api', name: 'api_')]
 class UserController extends AbstractController
 {
-    #[Route('/players', name: 'players_list', methods: ['GET'])]
+    #[Route('/players', name: 'get_all', methods: ['GET'])]
     public function getAllUsers(EntityManagerInterface $em): JsonResponse
     {
         $users = $em->getRepository(User::class)->findAll();
@@ -35,7 +35,7 @@ class UserController extends AbstractController
         return $this->json($data);
     }
 
-    #[Route('/players/{id}', name: 'player_detail', methods: ['GET'])]
+    #[Route('/players/{id}', name: 'get_by_id', methods: ['GET'])]
     public function getUserById(int $id, EntityManagerInterface $em): JsonResponse
     {
         $user = $em->getRepository(User::class)->find($id);
