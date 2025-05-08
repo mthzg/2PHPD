@@ -1,0 +1,136 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Admin Dashboard{% endblock %}
+
+{% block body %}
+<h1>Admin Dashboard</h1>
+
+<section>
+    <h2>Users</h2>
+    
+    <form action="{{ path('admin_get_all_users') }}" method="post">
+        <button type="submit">Get All Users</button>
+    </form>
+    <br>
+    
+    <form action="{{ path('admin_modify_user') }}" method="post">
+        <input type="number" name="id" placeholder="User ID" required>
+        <input type="email" name="email" placeholder="Email" required>
+        <input type="text" name="first_name" placeholder="First Name" required>
+        <input type="text" name="last_name" placeholder="Last Name" required>
+        <input type="text" name="username" placeholder="Username" required>
+        <input type="text" name="status" placeholder="Status">
+        <input type="password" name="password" placeholder="Password (optional)">
+        <input type="text" name="roles" placeholder="Roles (e.g. ROLE_USER, ROLE_ADMIN)" required>
+        <button type="submit">Modify User</button>
+    </form>
+    <br>
+    
+    <form action="{{ path('admin_delete_user') }}" method="post">
+        <input type="number" name="id" placeholder="User ID" required>
+        <button type="submit">Delete User</button>
+    </form>
+
+    {% if users is defined %}
+        <h3>All Users</h3>
+        <ul>
+            {% for user in users %}
+                <li>
+                    ID: {{ user.id }},
+                    Username: {{ user.username }},
+                    Email: {{ user.email }},
+                    Status: {{ user.status }},
+                    Roles: {{ user.roles | join(', ') }}
+                </li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+</section>
+
+<section>
+    <h2>Tournaments</h2>
+    
+    <form action="{{ path('admin_get_all_tournaments') }}" method="post">
+        <button type="submit">Get All Tournaments</button>
+    </form>
+    <br>
+    
+    <form action="{{ path('admin_modify_tournament') }}" method="post">
+        <input type="number" name="id" placeholder="Tournament ID" required>
+        <input type="text" name="tournament_name" placeholder="Tournament Name" required>
+        <input type="date" name="start_date" required>
+        <input type="date" name="end_date" required>
+        <input type="text" name="location" placeholder="Location">
+        <input type="text" name="description" placeholder="Description" required>
+        <input type="number" name="max_participants" placeholder="Max Participants" required>
+        <input type="text" name="status" placeholder="Status" required>
+        <input type="text" name="sport" placeholder="Sport" required>
+        <button type="submit">Modify Tournament</button>
+    </form>
+    <br>
+    
+    <form action="{{ path('admin_delete_tournament') }}" method="post">
+        <input type="number" name="id" placeholder="Tournament ID" required>
+        <button type="submit">Delete Tournament</button>
+    </form>
+
+    {% if tournaments is defined %}
+        <h3>All Tournaments</h3>
+        <ul>
+            {% for tournament in tournaments %}
+                <li>
+                    ID: {{ tournament.id }},
+                    Name: {{ tournament.tournament_name }},
+                    Status: {{ tournament.status }},
+                    Start Date: {{ tournament.start_date }},
+                    End Date: {{ tournament.end_date }}
+                </li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+</section>
+
+<section>
+    <h2>Matches</h2>
+    
+    <form action="{{ path('admin_get_matches') }}" method="post">
+        <input type="number" name="tournament_id" placeholder="Tournament ID" required>
+        <button type="submit">Get Matches</button>
+    </form>
+    <br>
+    
+    <form action="{{ path('admin_modify_match') }}" method="post">
+        <input type="number" name="match_id" placeholder="Match ID" required>
+        <input type="number" name="player1_id" placeholder="Player 1 ID" required>
+        <input type="number" name="player2_id" placeholder="Player 2 ID" required>
+        <input type="date" name="match_date" required>
+        <input type="number" name="score_player1" placeholder="Score Player 1" required>
+        <input type="number" name="score_player2" placeholder="Score Player 2" required>
+        <input type="text" name="status" placeholder="Status" required>
+        <button type="submit">Modify Match</button>
+    </form>
+    <br>
+    
+    <form action="{{ path('admin_delete_match') }}" method="post">
+        <input type="number" name="match_id" placeholder="Match ID" required>
+        <button type="submit">Delete Match</button>
+    </form>
+
+    {% if matches is defined %}
+        <h3>All Matches</h3>
+        <ul>
+            {% for match in matches %}
+                <li>
+                    Match ID: {{ match.id }},
+                    Player 1 ID: {{ match.player1_id }},
+                    Player 2 ID: {{ match.player2_id }},
+                    Score: {{ match.score_player1 }} - {{ match.score_player2 }},
+                    Status: {{ match.status }},
+                    Date: {{ match.match_date }}
+                </li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+</section>
+
+{% endblock %}
