@@ -7,9 +7,18 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
+use Symfony\Component\Messenger\MessageBusInterface; 
+use App\Message\AdminNotification; 
 
 class AdminDashboardController extends AbstractController
 {
+    private $bus;
+
+    public function __construct(MessageBusInterface $bus)
+    {
+        $this->bus = $bus;
+    }
+
     /**
      * @Route("/admin/dashboard", name="app_admin_dashboard", methods={"GET"})
      */
@@ -55,6 +64,9 @@ class AdminDashboardController extends AbstractController
             'json' => $data
         ]);
 
+        
+        $this->bus->dispatch(new AdminNotification('User updated', ['user_id' => $id, 'changes' => $data]));
+
         return $this->redirectToRoute('app_admin_dashboard');
     }
 
@@ -72,6 +84,9 @@ class AdminDashboardController extends AbstractController
                 'Authorization' => 'Bearer ' . $token,
             ],
         ]);
+
+        
+        $this->bus->dispatch(new AdminNotification('User deleted', ['user_id' => $id]));
 
         return $this->redirectToRoute('app_admin_dashboard');
     }
@@ -113,6 +128,9 @@ class AdminDashboardController extends AbstractController
             'json' => $data
         ]);
 
+        
+        $this->bus->dispatch(new AdminNotification('Tournament updated', ['tournament_id' => $id, 'changes' => $data]));
+
         return $this->redirectToRoute('app_admin_dashboard');
     }
 
@@ -130,6 +148,9 @@ class AdminDashboardController extends AbstractController
                 'Authorization' => 'Bearer ' . $token,
             ],
         ]);
+
+        
+        $this->bus->dispatch(new AdminNotification('Tournament deleted', ['tournament_id' => $id]));
 
         return $this->redirectToRoute('app_admin_dashboard');
     }
@@ -173,6 +194,9 @@ class AdminDashboardController extends AbstractController
             'json' => $data
         ]);
 
+        
+        $this->bus->dispatch(new AdminNotification('Match updated', ['match_id' => $id, 'changes' => $data]));
+
         return $this->redirectToRoute('app_admin_dashboard');
     }
 
@@ -190,6 +214,9 @@ class AdminDashboardController extends AbstractController
                 'Authorization' => 'Bearer ' . $token,
             ],
         ]);
+
+        
+        $this->bus->dispatch(new AdminNotification('Match deleted', ['match_id' => $id]));
 
         return $this->redirectToRoute('app_admin_dashboard');
     }

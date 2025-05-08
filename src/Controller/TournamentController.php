@@ -10,9 +10,18 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Messenger\MessageBusInterface; // Ajout pour la gestion des messages
+use App\Message\TournamentWinnerNotification; // Classe de notification à créer
 
 class TournamentController extends AbstractController
 {
+    private $bus;
+
+    public function __construct(MessageBusInterface $bus)
+    {
+        $this->bus = $bus;
+    }
+
     /**
      * @Route("/api/tournaments", name="api_tournament_list", methods={"GET"})
      */
@@ -93,7 +102,15 @@ class TournamentController extends AbstractController
 
         if (isset($data['winner_id'])) {
             $winner = $em->getRepository(User::class)->find($data['winner_id']);
-            if ($winner) $tournament->setWinner($winner);
+            if ($winner) {
+                $tournament->setWinner($winner);
+
+                // Envoyer une notification à tous les participants
+                $participants = $em->getRepository(User::class)->findByTournament($id);
+                foreach ($participants as $participant) {
+                    $this->bus->dispatch(new TournamentWinnerNotification($participant, $winner, $tournament));
+                }
+            }
         }
 
         $em->flush();

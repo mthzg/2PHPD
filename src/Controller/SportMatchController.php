@@ -12,9 +12,18 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Messenger\MessageBusInterface; 
+use App\Message\MatchUpdateNotification; 
 
 class SportMatchController extends AbstractController
 {
+    private $bus;
+
+    public function __construct(MessageBusInterface $bus)
+    {
+        $this->bus = $bus;
+    }
+
     /**
      * @Route("/api/tournaments/{tournamentId}/sport-matchs", name="api_tournament_get_matches", methods={"GET"})
      */
@@ -125,6 +134,9 @@ class SportMatchController extends AbstractController
         }
 
         $em->flush();
+
+        
+        $this->bus->dispatch(new MatchUpdateNotification($match));
 
         return $this->json($this->serializeMatch($match));
     }
