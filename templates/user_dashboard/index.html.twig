@@ -1,19 +1,118 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello UserDashboardController!{% endblock %}
+{% block title %}User Dashboard{% endblock %}
 
 {% block body %}
-<style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
+<h1>User Dashboard</h1>
 
-<div class="example-wrapper">
+<!-- Section pour créer un tournoi -->
+<section>
+    <h2>Créer un tournoi</h2>
+    <form action="{{ path('user_create_tournament') }}" method="POST">
+        <input type="text" name="tournament_name" placeholder="Nom du tournoi" required><br>
+        <input type="date" name="start_date" placeholder="Date de début" required><br>
+        <input type="date" name="end_date" placeholder="Date de fin" required><br>
+        <input type="text" name="location" placeholder="Lieu" required><br>
+        <textarea name="description" placeholder="Description" required></textarea><br>
+        <input type="number" name="max_participants" placeholder="Participants max" required><br>
+        <input type="text" name="status" placeholder="Statut" required><br>
+        <input type="text" name="sport" placeholder="Sport" required><br>
+        <button type="submit">Créer le tournoi</button>
+    </form>
+</section>
 
-    This friendly message is coming from:
-    <ul>
-        <li>Your controller at <code><a href="{{ 'C:/Users/Mathias/Documents/supinfo/B.eng2/2PHPD/Projet_2PHPD/Projet2PHPD/src/Controller/UserDashboardController.php'|file_link(0) }}">src/Controller/UserDashboardController.php</a></code></li>
-        <li>Your template at <code><a href="{{ 'C:/Users/Mathias/Documents/supinfo/B.eng2/2PHPD/Projet_2PHPD/Projet2PHPD/templates/user_dashboard/index.html.twig'|file_link(0) }}">templates/user_dashboard/index.html.twig</a></code></li>
-    </ul>
-</div>
+<!-- Section pour rejoindre un tournoi -->
+<section>
+    <h2>Rejoindre un tournoi</h2>
+    {% if tournaments is defined %}
+        {% for tournament in tournaments %}
+            <div>
+                <p>{{ tournament.name }} - {{ tournament.location }}</p>
+                <form action="{{ path('user_join_tournament', {'id': tournament.id}) }}" method="POST">
+                    <button type="submit">Rejoindre</button>
+                </form>
+            </div>
+        {% else %}
+            <p>Aucun tournoi disponible à rejoindre.</p>
+        {% endfor %}
+    {% else %}
+        <p>Aucun tournoi trouvé.</p>
+    {% endif %}
+</section>
+
+<!-- Section pour quitter un tournoi -->
+<section>
+    <h2>Quitter un tournoi</h2>
+    {% if tournaments is defined %}
+        {% for tournament in tournaments %}
+            <div>
+                <p>{{ tournament.name }} - {{ tournament.location }}</p>
+                <form action="{{ path('user_leave_tournament', {'id': tournament.id}) }}" method="POST">
+                    <button type="submit">Quitter</button>
+                </form>
+            </div>
+        {% else %}
+            <p>Aucun tournoi auquel vous participez.</p>
+        {% endfor %}
+    {% else %}
+        <p>Aucun tournoi trouvé.</p>
+    {% endif %}
+</section>
+
+<!-- Section pour créer un match -->
+<section>
+    <h2>Créer un match</h2>
+    <form action="{{ path('user_create_match') }}" method="POST">
+        <input type="number" name="tournament_id" placeholder="ID du tournoi" required><br>
+        <input type="number" name="player1_id" placeholder="ID du joueur 1" required><br>
+        <input type="number" name="player2_id" placeholder="ID du joueur 2" required><br>
+        <input type="date" name="match_date" placeholder="Date du match" required><br>
+        <input type="number" name="score_player1" placeholder="Score joueur 1" required><br>
+        <input type="number" name="score_player2" placeholder="Score joueur 2" required><br>
+        <input type="text" name="status" placeholder="Statut du match" required><br>
+        <button type="submit">Créer le match</button>
+    </form>
+</section>
+
+<!-- Section pour modifier un match -->
+<section>
+    <h2>Modifier un match</h2>
+    {% if matches is defined %}
+        {% for match in matches %}
+            <div>
+                <p>Match ID: {{ match.id }} | {{ match.player1_id }} vs {{ match.player2_id }}</p>
+                <form action="{{ path('user_modify_match', {'id': match.id}) }}" method="POST">
+                    <input type="number" name="score_player1" value="{{ match.score_player1 }}" placeholder="Score joueur 1" required><br>
+                    <input type="number" name="score_player2" value="{{ match.score_player2 }}" placeholder="Score joueur 2" required><br>
+                    <input type="text" name="status" value="{{ match.status }}" placeholder="Statut du match" required><br>
+                    <button type="submit">Modifier</button>
+                </form>
+            </div>
+        {% else %}
+            <p>Aucun match à modifier.</p>
+        {% endfor %}
+    {% else %}
+        <p>Aucun match trouvé.</p>
+    {% endif %}
+</section>
+
+<!-- Section pour supprimer un match -->
+<section>
+    <h2>Supprimer un match</h2>
+    {% if matches is defined %}
+        {% for match in matches %}
+            <div>
+                <p>Match ID: {{ match.id }} | {{ match.player1_id }} vs {{ match.player2_id }}</p>
+                <form action="{{ path('user_delete_match', {'id': match.id}) }}" method="POST">
+                    <button type="submit">Supprimer</button>
+                </form>
+            </div>
+        {% else %}
+            <p>Aucun match à supprimer.</p>
+        {% endfor %}
+    {% else %}
+        <p>Aucun match trouvé.</p>
+    {% endif %}
+</section>
+
 {% endblock %}
