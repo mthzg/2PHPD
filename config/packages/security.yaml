@@ -31,7 +31,9 @@ security:
             jwt: ~
 
     access_control:
+        - { path: ^/login, roles: PUBLIC_ACCESS }
         - { path: ^/api/login, roles: PUBLIC_ACCESS }
+        - { path: ^/register, roles: PUBLIC_ACCESS }
         - { path: ^/api/register, roles: PUBLIC_ACCESS }
         - { path: ^/api/players, roles: ROLE_ADMIN }
         - { path: ^/api/tournaments, roles: ROLE_USER }
